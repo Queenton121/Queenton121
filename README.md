@@ -2,7 +2,7 @@
 - 👀 I’m interested in coding
 - 🌱 I’m currently learning more about coding
 - 💞️ I’m looking to collaborate on anything related to coding
-- 📫 How to reach me ...here
+- 📫 How to reach me ...@Queenton121 here
 
 <!---
 Queenton121/Queenton121 is a ✨ special ✨ repository because its `README.md` (this file) appears on your GitHub profile.
