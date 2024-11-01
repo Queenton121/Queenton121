@@ -1,0 +1,139 @@
+<?php
+session_start();
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['form_name']) && $_POST['form_name'] == 'loginform')
+{
+   $success_page = './ADMIN-DETAILS.html';
+   if (isset($_SESSION['referrer']))
+   {
+      $success_page = $_SESSION['referrer'];
+   }
+   $error_page = basename(__FILE__);
+   $usernames = array('admin');
+   $passwords = array('21232f297a57a5a743894a0e4a801fc3');
+   $roles = array('Administrator');
+   $fullnames = array('admin');
+   $emailaddresses = array('admin@admin.com');
+   $crypt_pass = md5($_POST['password']);
+   $found = false;
+   $db_email = '';
+   $db_fullname = '';
+   $db_username = '';
+   $db_role = '';
+   $session_timeout = 600;
+   for ($i=0; $i<count($usernames); $i++)
+   {
+      if (($usernames[$i] == $_POST['username'] || $emailaddresses[$i] == $_POST['username']) && $passwords[$i] == $crypt_pass)
+      {
+         $found = true;
+         $db_email = $emailaddresses[$i];
+         $db_fullname = $fullnames[$i];
+         $db_username = $usernames[$i];
+         $db_role = $roles[$i];
+      }
+   }
+   if ($found == false)
+   {
+      header('Location: '.$error_page);
+      exit;
+   }
+   else
+   {
+      $_SESSION['email'] = $db_email;
+      $_SESSION['fullname'] = $db_fullname;
+      $_SESSION['username'] = $db_username;
+      $_SESSION['role'] = $db_role;
+      $_SESSION['expires_by'] = time() + $session_timeout;
+      $_SESSION['expires_timeout'] = $session_timeout;
+      $rememberme = isset($_POST['rememberme']) ? true : false;
+      if ($rememberme)
+      {
+         setcookie('username', $db_username, time() + 3600*24*30);
+         setcookie('password', $_POST['password'], time() + 3600*24*30);
+      }
+      header('Location: '.$success_page);
+      exit;
+   }
+}
+$username = isset($_COOKIE['username']) ? $_COOKIE['username'] : '';
+$password = isset($_COOKIE['password']) ? $_COOKIE['password'] : '';
+?>
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>login</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="font-awesome.min.css" rel="stylesheet">
+<link href="Untitled1.css" rel="stylesheet">
+<link href="LOGIN.css" rel="stylesheet">
+<script src="jquery-3.6.0.min.js"></script>
+<script src="wb.panel.min.js"></script>
+<script>
+$(document).ready(function()
+{
+   $("#PanelMenu1").panel({animate: true, animationDuration: 200, animationEasing: 'linear', dismissible: true, display: 'overlay', position: 'right', toggle: true, overlay: true});
+});
+</script>
+</head>
+<body>
+<div id="wb_PageHeader">
+<div id="PageHeader">
+<div class="row">
+<div class="col-1">
+<picture id="wb_Picture1" style="display:block;width: 100%;height:auto;z-index:0">
+<img src="images/1j+ojFVDOMkX9Wytexe43D6kh...KBrBZGmx...OwXs1M3EMoAJtligvj...Zr...png" id="Picture1" alt="" width="131" height="79">
+</picture>
+</div>
+<div class="col-2">
+<div id="wb_Heading1" style="display:inline-block;width:100%;z-index:1;">
+<h1 id="Heading1">QUINTON EASY TRANSPOTATION SERVICES</h1>
+</div>
+</div>
+<div class="col-3">
+<div id="wb_PanelMenu1" style="display:inline-block;width:63px;height:70px;z-index:2;">
+<a href="#PanelMenu1_markup" id="PanelMenu1">&nbsp;</a>
+<div id="PanelMenu1_markup">
+<ul role="menu">
+<li role="menuitem"><a href="./HOME.html" class="nav-link"><i class="fa fa-home fa-fw"></i><span>Home</span></a></li>
+<li role="menuitem"><a href="./ABOUT-US.html" class="nav-link"><i class="fa fa-address-card fa-fw"></i><span>ABOUT US</span></a></li>
+<li role="menuitem"><a href="./CONTACT-US.html" class="nav-link"><i class="fa fa-volume-control-phone fa-fw"></i><span>CONTACT US</span></a></li>
+<li role="menuitem"><a href="./LOGIN.html" class="nav-link"><i class="fa fa-user-circle-o fa-fw"></i><span>LOGIN</span></a></li>
+<li role="menuitem"><a href="./SIGNUP.html" class="nav-link"><i class="fa fa-user-plus fa-fw"></i><span>SIGN UP</span></a></li>
+</ul>
+</div>
+
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="wb_Login1" style="position:absolute;left:171px;top:138px;width:608px;height:395px;z-index:4;">
+<form name="loginform" method="post" accept-charset="UTF-8" action="<?php echo basename(__FILE__); ?>" id="loginform">
+<input type="hidden" name="form_name" value="loginform">
+<table id="Login1">
+<tr>
+   <td class="header">Log In</td>
+</tr>
+<tr>
+   <td class="label"><label for="username">User Name</label></td>
+</tr>
+<tr>
+   <td class="row"><input class="input" name="username" type="text" id="username" value="<?php echo $username; ?>"></td>
+</tr>
+<tr>
+   <td class="label"><label for="password">Password</label></td>
+</tr>
+<tr>
+   <td class="row"><input class="input" name="password" type="password" id="password" value="<?php echo $password; ?>"></td>
+</tr>
+<tr>
+   <td class="row"><input id="rememberme" type="checkbox" name="rememberme"><label for="rememberme">Remember me</label></td>
+</tr>
+<tr>
+   <td style="text-align:center;vertical-align:bottom"><input class="button" type="submit" name="login" value="Log In" id="login"></td>
+</tr>
+</table>
+</form>
+</div>
+</body>
+</html>
